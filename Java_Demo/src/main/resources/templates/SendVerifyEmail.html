@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Email Template</title>
+</head>
+<body>
+<span>Helllo :</span><h1 th:text="${user.username}"></h1>
+<p>Wellcome to my website</p>
+<p>Check your email please: <span th:text="${user.email}"></span></p>
+<p>Check your phone please: <span th:text="${user.phoneNumber}"></span></p>
+<p>Checked and active</p>
+<a style=" margin-top: 50px;padding:15px;border: 1px solid black;border-radius: 4px;background-color: rgb(254, 234, 208);cursor: pointer;"
+   th:href="'http://localhost:3000/verifyEmail?activeKey=' + ${user.activeKey}">Active</a>
+
+</body>
+</html>

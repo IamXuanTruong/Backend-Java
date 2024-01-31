@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +19,5 @@ public class Category {
     private Long category_id;
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String category_name;
+
 }

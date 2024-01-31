@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
@@ -17,4 +19,5 @@ public class Trademark {
     private Long trademark_id;
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String trademard_name;
+
 }

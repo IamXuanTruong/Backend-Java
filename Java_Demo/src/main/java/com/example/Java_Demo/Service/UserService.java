@@ -19,10 +19,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.TemplateEngine;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,6 +38,7 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final TemplateEngine templateEngine;
     private final AuthenticationManager authenticationManager;
+    private final PasswordResetTokenService passwordResetTokenService;
 
     private final JwtService jwtService;
     @Autowired
@@ -49,8 +51,8 @@ public class UserService implements IUserService {
                     "User with email " + request.email() + " already exists");
         }
         var newUser = new Users();
-        newUser.setUsername(request.username());
-        newUser.setImages(request.images());
+        newUser.setFirstName(request.firstName());
+        newUser.setLastName(request.lastName());
         newUser.setEmail(request.email());
         newUser.setPassword(passwordEncoder.encode(request.password()));
         newUser.setRole(request.role());
@@ -84,14 +86,21 @@ public class UserService implements IUserService {
         return new LoginReponse(jwtService.generateToken(user));
     }
 
-    @Override
-    public UserReponse GetProfileUser(String email) {
-        return null;
+    public UserReponse GetProfileUser(String email){
+        Users user = this.findByEmail(email).orElseThrow();
+        return new UserReponse(user.getId(),user.getFirstName(),user.getLastName(),user.getEmail(),
+                user.getRole(),user.getAddress(),user.getPhoneNumber());
     }
+
     @Override
     public Optional<Users> findByEmail(String email) {
         return usersRepository.findByEmail(email);
     }
+    public Optional<Users> findUserByResetPasswordToken(String token) {
+        return passwordResetTokenService.findUserByPasswordToken(token);
+    }
+
+
 
     @Override
     public String generateActiveKey() {
@@ -122,12 +131,15 @@ public class UserService implements IUserService {
         return passwordEncoder.matches(oldPassword, users.getPassword());
     }
 
+
     @Override
     public void createPasswordResetTokenForUser(Users users, String resetPasswordToken) {
-
+        passwordResetTokenService.createPasswordResetTokenForUser(users,resetPasswordToken);
     }
 
-
+    public String validatePasswordResetToken(String token){
+        return passwordResetTokenService.validatePasswordResetToken(token);
+    }
 
     public Users getUserLogining(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -140,7 +152,9 @@ public class UserService implements IUserService {
     public void sendEmail(Users newUser, String token){
         try {
             String emailFrom = "truongept2003@gmail.com";
-            String subject = "Webcome to Website";
+            String subject = "Chào mừng bạn đến với thành phố của những giấc mơ";
+
+            // Tạo context Thymeleaf
             Context context = new Context();
             Object[] Variable = {
                     newUser,
@@ -152,7 +166,7 @@ public class UserService implements IUserService {
             String htmlContent = templateEngine.process("SendVerifyEmail", context);
             if(!token.isBlank()){
                 context.setVariable("Variable",Variable);
-                subject = "Request reset website password!";
+                subject = "Request reset BeeClothes password!";
                 htmlContent = templateEngine.process("RequestResetPassword", context);
             }
             // Tạo MimeMessage và thiết lập nội dung HTML
@@ -162,6 +176,7 @@ public class UserService implements IUserService {
             helper.setTo(newUser.getEmail());
             helper.setSubject(subject);
             helper.setText(htmlContent, true);
+
             // Gửi email
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
@@ -169,6 +184,7 @@ public class UserService implements IUserService {
             e.printStackTrace(); // Hoặc thực hiện xử lý khác
         }
     }
+
     public List<Users> getprofile() {
         return usersRepository.findAll();
     }

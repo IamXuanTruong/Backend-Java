@@ -20,16 +20,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
 public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "NVARCHAR(MAX)")
-    private String username;
+    private String firstName;
+    @Column(columnDefinition = "NVARCHAR(MAX)")
+    private String lastName;
     @NaturalId(mutable = true)
     private String email;
-    private String images;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;

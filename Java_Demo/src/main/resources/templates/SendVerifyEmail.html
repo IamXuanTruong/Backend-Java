@@ -4,13 +4,12 @@
     <title>Email Template</title>
 </head>
 <body>
-<span>Helllo :</span><h1 th:text="${user.username}"></h1>
-<p>Wellcome to my website</p>
-<p>Check your email please: <span th:text="${user.email}"></span></p>
-<p>Check your phone please: <span th:text="${user.phoneNumber}"></span></p>
-<p>Checked and active</p>
+<h1>Hello <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span>!</h1>
+<p>Chào mừng quý khách đã tham gia dịch vụ của chúng tôi</p>
+<p>Vui lòng kiểm tra lại email của quý khách: <span th:text="${user.email}"></span></p>
+<p>Kiểm tra thông tin và xác thực</p>
 <a style=" margin-top: 50px;padding:15px;border: 1px solid black;border-radius: 4px;background-color: rgb(254, 234, 208);cursor: pointer;"
-   th:href="'http://localhost:3000/verifyEmail?activeKey=' + ${user.activeKey}">Active</a>
-
+   th:href="${user.activeKey}">Vâng đây là tôi</a>
 </body>
+
 </html>

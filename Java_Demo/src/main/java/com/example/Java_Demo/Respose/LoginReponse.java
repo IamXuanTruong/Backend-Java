@@ -6,4 +6,6 @@ import lombok.Data;
 @Data
 public class LoginReponse {
     private String accessToken;
+
+
 }

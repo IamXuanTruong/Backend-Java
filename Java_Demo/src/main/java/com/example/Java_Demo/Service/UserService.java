@@ -62,13 +62,14 @@ public class UserService implements IUserService {
         this.sendEmail(newUser,"");
         usersRepository.save(newUser);
     }
+
     public void updateIsEnabled(String activeKey){
         Optional<Users> newUser = usersRepository.findByActiveKey(activeKey);
         if(newUser.isPresent()){
             usersRepository.updateIsEnable(activeKey);
         }
-
     }
+
 
     public void ResendEmailVerify(String email){
         Users newUser =  this.findByEmail(email).orElseThrow();

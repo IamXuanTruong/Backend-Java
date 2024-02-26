@@ -9,7 +9,7 @@
 <p>Vui lòng kiểm tra lại email của quý khách: <span th:text="${user.email}"></span></p>
 <p>Kiểm tra thông tin và xác thực</p>
 <a style=" margin-top: 50px;padding:15px;border: 1px solid black;border-radius: 4px;background-color: rgb(254, 234, 208);cursor: pointer;"
-   th:href="${user.activeKey}">Vâng đây là tôi</a>
+   th:href="'http://localhost:8080/api/verify?activeKey=' + ${user.activeKey}">Vâng đây là tôi</a>
 </body>
 
 </html>

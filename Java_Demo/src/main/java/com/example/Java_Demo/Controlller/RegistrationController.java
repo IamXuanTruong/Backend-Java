@@ -46,19 +46,10 @@ public class RegistrationController {
         Users user = userService.findByEmail(loginRequest.email()).orElseThrow();
         if(!user.isEnabled()){
             return ResponseEntity.badRequest().body(new LoginReponse(""));
-
         }
         return ResponseEntity.ok(userService.Login(loginRequest));
     }
-    @GetMapping("/verify")
-    public ResponseEntity<String> verifyEmail(@RequestParam("activeKey") String activeKey){
-        if(userService.validActiveKey(activeKey)){
-            userService.updateIsEnabled(activeKey);
-            return ResponseEntity.ok("Verify successfully");
-        }
-        return ResponseEntity.badRequest().body("The Verify time has expired, please click resend email\n");
 
-    }
 
     @PostMapping("/resend-verify")
     public ResponseEntity<String> ResendverifyEmail(@RequestParam("email") String email){
